@@ -5,7 +5,7 @@ import unittest
 
 from .grammar import get_parser
 from .nodes import WordNode, PhraseNode, FieldNode, OrNode, AndNode, MustNode, NotNode, JoinNode, RangeNode, UnaryOperatorNode
-from . import parse
+from . import parse, Parser
 
 
 def pretty_print(result):
@@ -76,7 +76,7 @@ class ParserTestCase(unittest.TestCase):
 
         result = self.range.parseString(">= 2012-12-10")
         self.assertEqual(result[0], RangeNode({
-            "gte": datetime.date(2012, 12, 10)
+            "gte": "2012-12-10"
         }))
 
     def test_strand(self):
@@ -156,11 +156,17 @@ class ParserTestCase(unittest.TestCase):
         self.assertStack([WordNode("foo:f")])
 
         self.assertMatch(self.query, "(a:b c:d)")
-        #print(self.stack)
+
+        self.assertMatch(self.query, "foo + bar")
+        self.assertStack([WordNode("foo"), WordNode("bar"), MustNode(), OrNode()])
 
     def test_es(self):
         #pretty_print(parse("field:(foo +bar)"))
-        pretty_print(parse("name:(hi -asdfjasdf lame sdf) corpus:butt"))
+        #pretty_print(parse("name:(hi -asdfjasdf lame sdf) corpus:butt"))
+        parse = Parser()
+        #import pdb; pdb.set_trace()
+        pretty_print(parse("foo + bar"))
+        #print(parse.stack)
 
 if __name__ == '__main__':
     unittest.main()

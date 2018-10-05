@@ -154,10 +154,12 @@ class Parser():
             elif isinstance(op, OrNode):
                 op1 = self.eval(field=field, top_level=False, must=must, must_not=must_not, field_level=new_field_level)
                 op2 = self.eval(field=field, top_level=False, must=must, must_not=must_not, field_level=new_field_level)
-                #if not top_level:
+
                 return {
                     "bool": {
-                        "should": [op1, op2],
+                        # JoinNode turn into OrNodes. Sometimes, there is not a
+                        # second operand, so we need to make sure it isn't None
+                        "should": [x for x in [op1, op2] if x != None],
                         "minimum_should_match": 1,
                         "must": must if push_musts else [],
                         "must_not": must_not if push_musts else []
@@ -179,7 +181,7 @@ class Parser():
                 op1 = self.eval(field=field, top_level=False, must=must, must_not=must_not, field_level=new_field_level)
                 return {
                     "bool": {
-                        "must_not": [op1] + (must_not if push_musts else []),
+                        "must_not": [x for x in [op1] if x != None] + (must_not if push_musts else []),
                         "must": (must if push_musts else [])
                     }
                 }
