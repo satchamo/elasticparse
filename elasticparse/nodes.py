@@ -104,22 +104,22 @@ class MustNode(UnaryOperatorNode):
 
 class RangeNode(Node):
     def __init__(self, string=None, location=None, tokens=None):
-        if location == None: 
+        if location == None:
             self.token = string
         else:
             first = tokens[0]
             last = tokens[-1]
             if first == ">":
-                self.token = {"gt": tokens.get("value")}
+                self.token = {"gt": tokens.get("value")[0]}
             elif first == ">=":
-                self.token = {"gte": tokens.get("value")}
+                self.token = {"gte": tokens.get("value")[0]}
             elif first == "<":
-                self.token = {"lt": tokens.get("value")}
+                self.token = {"lt": tokens.get("value")[0]}
             elif first == "<=":
-                self.token = {"lte": tokens.get("value")}
+                self.token = {"lte": tokens.get("value")[0]}
             else:
-                left = tokens['left']
-                right = tokens['right']
+                left = tokens['left'][0]
+                right = tokens['right'][0]
                 stop = "lte" if last == "]" else "lt"
                 start = "gte" if first == "[" else "gt"
                 self.token = {start: left, stop: right}

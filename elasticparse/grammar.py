@@ -128,6 +128,8 @@ class Parser():
                     "must_not": []
                 }
             }
+        else:
+            expr = None
 
         push_musts = top_level or field_level
         if top_level:
@@ -188,11 +190,9 @@ class Parser():
             elif isinstance(op, MustNode):
                 op1 = self.eval(field=field, top_level=False, must=must, must_not=must_not, field_level=new_field_level)
                 must.append(op1)
-                return None 
             elif isinstance(op, MustNotNode):
                 op1 = self.eval(field=field, top_level=False, must=must, must_not=must_not, field_level=new_field_level)
                 must_not.append(op1)
-                return None 
             else:
                 print("WRONG")
 
